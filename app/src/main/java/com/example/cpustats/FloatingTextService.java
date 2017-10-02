@@ -1,10 +1,13 @@
 package com.example.cpustats;
+import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -38,6 +41,7 @@ public class FloatingTextService extends Service {
         Statistics = new stats(getBaseContext());
         handler = new Handler();
 
+
         //a face floating bubble as imageView
         floatingFaceBubble.setImageResource(R.mipmap.ic_launcher_round);
 
@@ -52,8 +56,11 @@ public class FloatingTextService extends Service {
                 LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         myParams.gravity = Gravity.TOP | Gravity.LEFT;
-        myParams.x=0;
-        myParams.y=100;
+//        myParams.x=0;
+//        myParams.y=100;
+        DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+        myParams.x=displayMetrics.widthPixels;
+        myParams.y=10;
         // add a floatingfacebubble icon in window
         //windowManager.addView(floatingFaceBubble, myParams);
         windowManager.addView(floatingTextView, myParams);
