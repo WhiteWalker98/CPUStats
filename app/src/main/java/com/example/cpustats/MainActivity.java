@@ -12,9 +12,11 @@ import android.widget.Switch;
 public class MainActivity extends AppCompatActivity {
     Switch mToggleSwitch;
     boolean check;
+    static MainActivity a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        a = this;
         setContentView(R.layout.activity_main);
         mToggleSwitch = (Switch) findViewById(R.id.toggle_switch);
         check=false;
@@ -32,5 +34,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        a = null;
     }
 }

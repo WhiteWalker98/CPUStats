@@ -20,8 +20,8 @@ public class stats
 
     private String statistics = "%s\t%s\n%s\t%s";
 
-    private String dSpeed = "D %.02f %s";
-    private String uSpeed = "U %.02f %s";
+    private String dSpeed = "\u2193 %.02f %s";
+    private String uSpeed = "\u2191 %.02f %s";
     private String cpu = "CPU %.02f";
     private String ram = "RAM %d M";
 
@@ -96,9 +96,10 @@ public class stats
 
     private String DownloadDataUsage()
     {
-        int level = 0;
+        int level = 1;
         long curRxByteCount = TrafficStats.getTotalRxBytes();
         long downloadedData = curRxByteCount - prevRxByteCount;
+        prevRxByteCount = curRxByteCount;
         float speed = (float)downloadedData*1000/(SystemClock.elapsedRealtime()-time);
         while(speed>1024)
         {
@@ -131,9 +132,10 @@ public class stats
 
     private String UploadDataUsage()
     {
-        int level = 0;
+        int level = 1;
         long curTxByteCount = TrafficStats.getTotalTxBytes();
         long uploadedData = curTxByteCount - prevTxByteCount;
+        prevTxByteCount = curTxByteCount;
         float speed = (float)uploadedData*1000/(SystemClock.elapsedRealtime()-time);
         while(speed>1024)
         {

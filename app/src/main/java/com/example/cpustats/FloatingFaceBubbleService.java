@@ -13,6 +13,7 @@ import android.view.ViewConfiguration;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.Random;
@@ -23,8 +24,10 @@ public class FloatingFaceBubbleService extends Service {
     private Random random;
     private int UUID;
     private TextView floatingTextView;
-    private Handler handler = new Handler();
-    private final String STATS = "MY STATS";
+    private stats Statistics;
+    Handler handler;
+    private static final int UPDATE_DURATION = 500;
+
     public void onCreate() {
         super.onCreate();
         random = new Random();
@@ -32,12 +35,15 @@ public class FloatingFaceBubbleService extends Service {
         Log.d("Floating","UUID="+UUID);
         floatingFaceBubble = new ImageView(this);
         floatingTextView = new TextView(this);
+        Statistics = new stats(getBaseContext());
+        handler = new Handler();
+
         //a face floating bubble as imageView
         floatingFaceBubble.setImageResource(R.mipmap.ic_launcher_round);
 
         windowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
-        floatingTextView.setTextColor(Color.WHITE);
-        floatingTextView.setText(STATS);
+        floatingTextView.setTextColor(Color.argb(255,225,100,30));
+        floatingTextView.setBackgroundColor(Color.argb(64,200,200,200));
         //here is all the science of params
         final LayoutParams myParams = new WindowManager.LayoutParams(
                 LayoutParams.WRAP_CONTENT,
@@ -64,11 +70,11 @@ public class FloatingFaceBubbleService extends Service {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     //remove face bubble on long press
-
                     if(System.currentTimeMillis()-touchStartTime>ViewConfiguration.getLongPressTimeout() && initialTouchX== event.getRawX()){
-                        //windowManager.removeView(floatingFaceBubble);
-                        windowManager.removeView(floatingTextView);
-                       // Log.d("Floating","Inside hold down listener");
+                        if(MainActivity.a!=null)
+                        {
+                            MainActivity.a.mToggleSwitch.setChecked(false);
+                        }
                         stopSelf();
                         return false;
                     }
@@ -96,6 +102,17 @@ public class FloatingFaceBubbleService extends Service {
         } catch (Exception e){
             e.printStackTrace();
         }
+
+        handler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                floatingTextView.setText(Statistics.getStats());
+                handler.postDelayed(this,UPDATE_DURATION);
+            }
+        },UPDATE_DURATION);
+
     }
     @Override
     public IBinder onBind(Intent intent) {
