@@ -3,7 +3,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,13 +15,21 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Random;
+
 public class FloatingFaceBubbleService extends Service {
     private WindowManager windowManager;
     private ImageView floatingFaceBubble;
+    private Random random;
+    private int UUID;
     private TextView floatingTextView;
+    private Handler handler = new Handler();
     private final String STATS = "MY STATS";
     public void onCreate() {
         super.onCreate();
+        random = new Random();
+        UUID = random.nextInt(1000);
+        Log.d("Floating","UUID="+UUID);
         floatingFaceBubble = new ImageView(this);
         floatingTextView = new TextView(this);
         //a face floating bubble as imageView
@@ -54,9 +64,11 @@ public class FloatingFaceBubbleService extends Service {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     //remove face bubble on long press
-                    if(System.currentTimeMillis()-touchStartTime>ViewConfiguration.getLongPressTimeout() && initialTouchX== event.getX()){
+
+                    if(System.currentTimeMillis()-touchStartTime>ViewConfiguration.getLongPressTimeout() && initialTouchX== event.getRawX()){
                         //windowManager.removeView(floatingFaceBubble);
                         windowManager.removeView(floatingTextView);
+                       // Log.d("Floating","Inside hold down listener");
                         stopSelf();
                         return false;
                     }
@@ -67,6 +79,8 @@ public class FloatingFaceBubbleService extends Service {
                             initialY = myParams.y;
                             initialTouchX = event.getRawX();
                             initialTouchY = event.getRawY();
+                            Log.d("onTouch","initialTouchX = "+initialTouchX);
+                            Log.d("onTouch","event.getX() = "+event.getX());
                             break;
                         case MotionEvent.ACTION_UP:
                             break;
@@ -87,5 +101,14 @@ public class FloatingFaceBubbleService extends Service {
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("Floating", "Inside onDestroy of Floating class");
+        Log.d("Floating","OnDestroy UUID="+UUID);
+        windowManager.removeView(floatingTextView);
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 }
