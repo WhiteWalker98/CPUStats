@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CPU Stats</string>
+    <string name="toggle_text">Toggle CPU statistics :</string>
 </resources>
