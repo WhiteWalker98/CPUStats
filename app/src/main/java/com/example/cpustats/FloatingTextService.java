@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import java.util.Random;
 
-public class FloatingFaceBubbleService extends Service {
+public class FloatingTextService extends Service {
     private WindowManager windowManager;
     private ImageView floatingFaceBubble;
     private Random random;

@@ -1,11 +1,8 @@
 package com.example.cpustats;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -24,12 +21,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b && !check){
-                    startService(new Intent(MainActivity.this, FloatingFaceBubbleService.class));
+                    startService(new Intent(MainActivity.this, FloatingTextService.class));
 
                     check = true;
                 }
                 else{
-                    stopService(new Intent(MainActivity.this, FloatingFaceBubbleService.class));
+                    stopService(new Intent(MainActivity.this, FloatingTextService.class));
                     check = false;
                 }
             }
